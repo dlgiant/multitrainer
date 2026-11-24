@@ -17,6 +17,7 @@ export const R = {
   TimeBudget: "time-budget",
   // prep
   WarmupPattern: "warmup-pattern",
+  CardioBlock: "cardio-block",
   InjuryPrimer: "injury-primer",
   RampUp: "ramp-up",
   CooldownFirst: "cooldown-trimmed-first",
@@ -45,4 +46,4 @@ export const R = {
 } as const;
 
 export type ReasonId = (typeof R)[keyof typeof R];
-export const ENGINE_VERSION = "0.2.0";
+export const ENGINE_VERSION = "0.4.0";

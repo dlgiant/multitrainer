@@ -15,7 +15,8 @@ export type Pattern =
   | "squat" | "hinge" | "lunge" | "h-push" | "v-push" | "h-pull" | "v-pull"
   | "carry" | "core" | "conditioning" | "mobility";
 export type Role =
-  | "warmup" | "primer" | "main" | "accessory" | "core" | "stretch" | "breathing";
+  | "warmup" | "primer" | "main" | "accessory" | "core" | "stretch" | "breathing"
+  | "cardio";
 export type InjuryStatus = "acute" | "recovering" | "chronic" | "cleared";
 export type ExerciseId = string;
 
@@ -76,6 +77,8 @@ export interface Preferences {
   focus: string[];               // muscles, e.g. ["glutes"]
   noJump: boolean;
   spaceM2?: number;
+  /** Onde o bloco de cardio entra na sessão (default: 'late', antes do relaxamento). */
+  cardioPlacement?: "early" | "late";
 }
 
 export interface Environment {
@@ -105,7 +108,7 @@ export interface ClientModel {
 export interface PlannedSet { reps: number; targetRir: number }
 export interface PlannedExercise {
   exerciseId: ExerciseId;
-  block: "warmup" | "primer" | "main" | "accessory" | "core" | "cooldown";
+  block: "warmup" | "primer" | "main" | "accessory" | "core" | "cooldown" | "cardio";
   sets: number;
   targetReps: number;            // top of rep range
   targetRir: number;
@@ -113,13 +116,18 @@ export interface PlannedExercise {
   restMin: number;
   reason: Reason;
   pinned?: boolean;
+  durationMin?: number;          // cardio: tempo contínuo em minutos (targetReps/RIR ficam 0)
 }
+
+export type SessionStatus = "pending" | "ready" | "done";
 
 export interface SessionPlan {
   dayIndex: number;              // 0-based within the week
   week: number;                  // 1-based
   minutes: number;               // estimated duration
-  items: PlannedExercise[];
+  items: PlannedExercise[];      // empty while status is "pending" (JIT mode)
+  status?: SessionStatus;        // JIT mode; undefined = legacy block mode (all ready)
+  slots?: Pattern[];             // goal-ordered pattern slots of this session (sequence.ts)
 }
 
 export interface Program {
@@ -132,6 +140,8 @@ export interface Program {
   generatedFrom: ClientModel;    // snapshot for reproducibility
   engineVersion: string;
   status: "draft" | "active" | "done";
+  mode?: "block" | "jit";        // "block" (default): all sessions materialized upfront;
+                                 // "jit": sessions start pending, filled one at a time by nextSession
 }
 
 export interface Reason {

@@ -68,6 +68,7 @@ const BLOCK_LABEL: Record<string, string> = {
   accessory: 'Acessório',
   core: 'Core',
   cooldown: 'Relaxamento',
+  cardio: 'Cardio',
 };
 
 /** Rótulo do bloco + pseudo-exercícios do motor (ramp-up) não viram itens. */
@@ -105,14 +106,15 @@ export async function sessionToItems(session: SessionPlan): Promise<WorkoutItem[
     if (!resolvedId) continue; // exercício não existe no app: ignora (raro)
     const row = await db.exercises.get(resolvedId);
     if (!row) continue;
-    const isTempo = row.mode === 'tempo' || (!!row.holdSec && !row.loadable);
+    const isCardio = it.block === 'cardio';
+    const isTempo = isCardio || row.mode === 'tempo' || (!!row.holdSec && !row.loadable);
     const needsRampNote = it.block === 'main' && !mainSeen && session.items.some((x) => x.exerciseId === 'ramp-up');
     if (it.block === 'main') mainSeen = true;
     items.push({
       key: uid(),
       exerciseId: resolvedId,
       sets: it.sets,
-      ...(isTempo ? { durationSec: row.holdSec ?? 30 } : { reps: it.targetReps }),
+      ...(isTempo ? { durationSec: isCardio ? Math.round((it.durationMin ?? 10) * 60) : row.holdSec ?? 30 } : { reps: it.targetReps }),
       weightKg: it.loadKg,
       restSec: Math.round(it.restMin * 60),
       targetRir: it.targetRir,

@@ -35,6 +35,8 @@ export interface ClientPrefs {
   /** Exercícios que o cliente gosta / evita (soft score ±). */
   likes: string[];
   dislikes: string[];
+  /** Onde o bloco de cardio entra na sessão (marco 4; motor usa 'late' como default). */
+  cardioPlacement?: 'early' | 'late';
 }
 
 /** Snapshot do estado físico do cliente numa data (avaliação). */

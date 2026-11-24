@@ -22,7 +22,7 @@ export function suggestSubstitutions(
     seen.add(ex.id);
     out.push({ exercise: ex, reason });
   };
-  // 1. regression chain first (resolved within the given catalogue)
+  // 1. regression chain first
   let cur = find(exercise.regressesTo);
   while (cur) {
     const c = cur;

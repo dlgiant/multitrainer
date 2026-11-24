@@ -359,6 +359,7 @@ function PrefsSheet({ client, onClose }: { client: Client; onClose: () => void }
   const [daysPerWeek, setDays] = useState(client.prefs?.daysPerWeek ?? 3);
   const [sessionMin, setMin] = useState(client.prefs?.sessionMin ?? 55);
   const [noJump, setNoJump] = useState(client.prefs?.noJump ?? false);
+  const [cardioPlacement, setCardioPlacement] = useState<'early' | 'late'>(client.prefs?.cardioPlacement ?? 'late');
   const [focus, setFocus] = useState<string[]>(client.prefs?.focus ?? []);
   const [likes, setLikes] = useState<string[]>(client.prefs?.likes ?? []);
   const [dislikes, setDislikes] = useState<string[]>(client.prefs?.dislikes ?? []);
@@ -376,6 +377,7 @@ function PrefsSheet({ client, onClose }: { client: Client; onClose: () => void }
       daysPerWeek: Math.min(6, Math.max(1, daysPerWeek)),
       sessionMin: Math.min(120, Math.max(20, sessionMin)),
       noJump,
+      cardioPlacement,
       focus,
       likes,
       dislikes,
@@ -411,6 +413,15 @@ function PrefsSheet({ client, onClose }: { client: Client; onClose: () => void }
           <button type="button" className={`chip btn-chip ${noJump ? 'on' : ''}`} onClick={() => setNoJump(!noJump)}>
             {noJump ? 'Sim, sem impactos' : 'Não, impactos liberados'}
           </button>
+        </Field>
+        <Field label="Posição do cardio" hint="Onde o bloco de cardio entra na sessão (marco 4).">
+          <div className="chips">
+            {([['late', 'No fim, antes do alongamento'], ['early', 'No início, após o aquecimento']] as const).map(([v, label]) => (
+              <button key={v} type="button" className={`chip btn-chip ${cardioPlacement === v ? 'on' : ''}`} onClick={() => setCardioPlacement(v)}>
+                {label}
+              </button>
+            ))}
+          </div>
         </Field>
         <Field label="Focos musculares">
           <div className="chips">

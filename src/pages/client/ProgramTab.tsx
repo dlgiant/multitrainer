@@ -17,6 +17,7 @@ const BLOCK_LABEL: Record<string, string> = {
   main: 'Principal',
   accessory: 'Acessório',
   core: 'Core',
+  cardio: 'Cardio',
   cooldown: 'Relaxamento',
 };
 

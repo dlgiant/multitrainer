@@ -6,6 +6,7 @@ import { R } from "./reasons.ts";
 
 export function estimateMinutes(items: PlannedExercise[], tempoBy: (id: string) => number): number {
   return items.reduce((min, it) => {
+    if (it.durationMin !== undefined) return min + it.durationMin;
     const perSet = (it.targetReps * tempoBy(it.exerciseId)) / 60 + it.restMin;
     return min + perSet * it.sets;
   }, 0);
@@ -21,6 +22,13 @@ export function fitToBudget(
   if (over() <= 0) return plan;
   // 1. cool-down first
   plan = plan.filter((it) => it.block !== "cooldown");
+  if (over() <= 0) return plan;
+  // 1.5 shrink continuous cardio (never below 4 min; 0 = drop)
+  plan = plan.map((it) =>
+    it.block === "cardio" && it.durationMin !== undefined
+      ? { ...it, durationMin: Math.max(0, Math.floor(it.durationMin / 2)), reason: { ...it.reason, id: R.TimeBudget } }
+      : it,
+  ).filter((it) => it.block !== "cardio" || (it.durationMin ?? 0) > 0);
   if (over() <= 0) return plan;
   // 2. accessory sets
   for (let i = plan.length - 1; i >= 0 && over() > 0; i--) {

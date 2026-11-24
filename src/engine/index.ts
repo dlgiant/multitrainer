@@ -1,7 +1,9 @@
 export * from "./types.ts";
 export * from "./reasons.ts";
 export { evaluateGates, BP_SYSTOLIC_THRESHOLD, BP_DIASTOLIC_THRESHOLD } from "./gates.ts";
-export { generateProgram, GateError } from "./generate.ts";
+export { generateProgram, buildSession, nextSession, GateError, READINESS_LOW, type BuildCtx, type NextSessionResult } from "./generate.ts";
+export { sequenceFor, orderSlotsForGoal, type SessionSlot } from "./sequence.ts";
+export { generateGroupProgram, slotsOfSession, picksOfSession, type GroupMode, type GroupProgram } from "./group.ts";
 export { progress } from "./progress.ts";
 export { suggestSubstitutions } from "./substitution.ts";
 export { passesHardFilters, violatesRule } from "./filters.ts";

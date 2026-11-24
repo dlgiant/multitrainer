@@ -47,6 +47,9 @@ function tokensFromEquipment(names: string[]): string[] {
     if (/barra fixa|pull-?up|barra de dominada/.test(n)) out.add('barra');
     if (/parede|porta|ancor/.test(n)) out.add('wallAnchor');
     if (/trx|suspens/.test(n)) out.add('trx');
+    if (/bike|bicicl|pedal|ciclis/.test(n)) out.add('bike');
+    if (/remador|remo|rower/.test(n)) out.add('rower');
+    if (/esteira|treadmill/.test(n)) out.add('treadmill');
   }
   return [...out];
 }
@@ -78,6 +81,7 @@ export async function buildEngineClient(clientId: string): Promise<ClientModel> 
       dislikes: client.prefs?.dislikes ?? [],
       focus: client.prefs?.focus ?? [],
       noJump: client.prefs?.noJump ?? false,
+      cardioPlacement: client.prefs?.cardioPlacement ?? 'late',
     },
     env: {
       equipment: tokensFromEquipment(equipment.map((e) => e.name)),
@@ -202,6 +206,8 @@ export function reasonLabel(reason: { id: string; params?: Record<string, string
       return 'Ajustado para caber no tempo da sessão';
     case 'warmup-pattern':
       return 'Aquecimento alinhado aos padrões da sessão';
+    case 'cardio-block':
+      return `Cardio contínuo: ${p.minutes} min${p.deload ? ' (deload)' : ''} · objetivo ${p.goal}`;
     case 'injury-primer':
       return `Primer de ativação para ${p.pattern}`;
     case 'ramp-up':
