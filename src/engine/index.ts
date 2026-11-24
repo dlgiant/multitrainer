@@ -9,7 +9,7 @@ export { suggestSubstitutions } from "./substitution.ts";
 export { passesHardFilters, violatesRule } from "./filters.ts";
 export { softScore, rankForSlot } from "./scoring.ts";
 export { DOSE, doseFor, splitFor, slotsForDay } from "./dosing.ts";
-export { e1rm, seedLoad, pctForReps, roundDownToOwned } from "./benchmarks.ts";
+export { e1rm, seedLoad, pctForReps, roundDownToOwned, batteryFor, compareBenchmarks, type BatterySuggestion, type BenchmarkDelta, type BenchmarksComparison } from "./benchmarks.ts";
 export { progressExercise, earlyTriggers, resumeAfterBreak } from "./progression.ts";
 export { warmupFor, rampUpSets, cooldownFor } from "./warmup.ts";
 export { fitToBudget, estimateMinutes } from "./assembly.ts";

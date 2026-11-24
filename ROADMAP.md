@@ -12,12 +12,12 @@ Fonte original: `MultiTrainer — Workout Engine Plan.pdf`. Este arquivo é a li
 
 ## Backlog
 
-- [ ] **Marco 3 — restante**
-  - Bateria de benchmarks (testes de repetição alimentando `assessments.benchmarks`; `seedLoad`).
-  - Visão de reteste e comparação.
-  - Campo "meses de treinamento" no perfil/avaliação.
-  - Pickers de gostar/não gostar (likes/dislikes) na UI.
-  - Rotina de fim de dia sugerida automaticamente após gerar o programa.
+- [x] **Marco 3 — restante** *(75/75 testes no motor; app em `multitrainer@d19d803`)*
+  - **Bateria de benchmarks**: engine ganhou `batteryFor(client, catalogue)` (testes loadable, equipamento do cliente, cap de complexidade por nível, passa nos filtros de lesão; ordem determinística por papel/padrão) e `tests/benchmarks.test.ts` cobrindo `e1rm`/`pctForReps`/`roundDownToOwned`/`seedLoad` (direto, ratio `RATIO`, calibração sem teste). App: `lib/benchmarks.ts` (BATTERY) + `assessments.benchmarks.repTests` → `engineAdapter` → `ClientModel.benchmarks` → `seedLoad`.
+  - **Visão de reteste e comparação**: engine ganhou `compareBenchmarks(before, after)` (delta de e1rm por teste, testes novos, delta de dor por região, improved/declined). App: série de e1rm por teste ao longo das avaliações em `ProfileTab` + histórico de avaliações.
+  - **Meses de treinamento**: campo no perfil/avaliação (`monthsTraining` em `db.ts`, `ProfileTab`, `engineAdapter`).
+  - **Pickers de gostar/não gostar**: `ProfileTab` com listas de likes/dislikes alimentando `prefs` (motor usa em `softScore`).
+  - **Rotina de fim de dia automática**: engine anexa `Program.eveningRoutine` (via `suggestStretches` com os músculos treinados da semana 1) ao gerar o programa em modo bloco; no app, `suggestEveningRoutine` cria a rotina ao ativar o programa (`ProgramTab`).
 
 - [ ] **Marco 4 — Variações de estrutura de treino** *(novo pedido; não implementar ainda)*
   - **Cardio**: novo bloco `cardio` no motor — exercícios de condicionamento (esteira, bike, remo, corda, escalada), dose em duração/intensidade (Z2, tempo contínuo), respeitando `noJump` (substituir por opções de baixo impacto) e limites de articulação.

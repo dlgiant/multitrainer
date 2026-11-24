@@ -142,6 +142,16 @@ export interface Program {
   status: "draft" | "active" | "done";
   mode?: "block" | "jit";        // "block" (default): all sessions materialized upfront;
                                  // "jit": sessions start pending, filled one at a time by nextSession
+  /** Evening stretch routine suggested right after generation (block mode),
+   *  from the muscles trained in week 1 — see routine.ts. */
+  eveningRoutine?: RoutineSuggestion[];
+}
+
+/** One suggested stretch (evening routine). Defined here so Program can
+ *  reference it without an import cycle; routine.ts re-exports it. */
+export interface RoutineSuggestion {
+  exercise: Exercise;
+  reason: Reason;
 }
 
 export interface Reason {

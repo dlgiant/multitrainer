@@ -1,10 +1,12 @@
 // Evening stretch routine (milestone 2, plan section 5). Pure: picks mobility
 // exercises that pass the injury rules and prioritise what today's sessions
 // trained, the client's focus areas and stretches the injury rules prefer.
-import type { ClientModel, Exercise, Rule } from "./types.ts";
+import type { ClientModel, Exercise, Rule, RoutineSuggestion } from "./types.ts";
 import { R } from "./reasons.ts";
 import { passesHardFilters } from "./filters.ts";
 import { rulesForInjury } from "./catalogue.ts";
+
+export type { RoutineSuggestion } from "./types.ts";
 
 export interface RoutineContext {
   /** Músculos treinados hoje/semana (primary + secondary dos exercícios da sessão). */
@@ -13,11 +15,6 @@ export interface RoutineContext {
   focusAreas?: string[];
   /** Tamanho da rotina (default 6). */
   limit?: number;
-}
-
-export interface RoutineSuggestion {
-  exercise: Exercise;
-  reason: { id: string; params?: Record<string, string | number | boolean> };
 }
 
 export function suggestStretches(

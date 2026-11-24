@@ -13,6 +13,7 @@ import { warmupFor, rampUpSets, cooldownFor } from "./warmup.ts";
 import { fitToBudget, estimateMinutes } from "./assembly.ts";
 import { cardioFor } from "./cardio.ts";
 import { progress } from "./progress.ts";
+import { suggestStretches } from "./routine.ts";
 import { R, ENGINE_VERSION } from "./reasons.ts";
 
 export class GateError extends Error {
@@ -127,6 +128,25 @@ export function generateProgram(
     });
   }
 
+  // marco 3: evening routine suggested right after generation (block mode),
+  // from the muscles trained in week 1. JIT mode leaves it to the app, which
+  // suggests after activation (trained muscles come from logged sessions).
+  let eveningRoutine: Program["eveningRoutine"];
+  if (mode === "block") {
+    const trained = [
+      ...new Set(
+        sessions
+          .filter((s) => s.week === 1)
+          .flatMap((s) => s.items)
+          .flatMap((it) => {
+            const ex = catalogue.find((e) => e.id === it.exerciseId);
+            return ex ? [...ex.muscles.primary, ...ex.muscles.secondary] : [];
+          }),
+      ),
+    ];
+    eveningRoutine = suggestStretches(client, catalogue, rules, { trainedMuscles: trained, limit: 6 });
+  }
+
   return {
     id: `program-${client.clientId}-v${ENGINE_VERSION}`,
     clientId: client.clientId,
@@ -138,6 +158,7 @@ export function generateProgram(
     engineVersion: ENGINE_VERSION,
     status: "draft",
     mode,
+    eveningRoutine,
   };
 }
 
